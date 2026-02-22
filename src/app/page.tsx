@@ -99,24 +99,23 @@ function Navigation() {
         </span>
         
         <button
-          className="md:hidden w-10 h-10 flex flex-col justify-center items-center gap-1.5 relative z-[60]"
+          className="md:hidden w-12 h-12 flex flex-col justify-center items-center relative"
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label="Toggle menu"
         >
-          <span className={`block w-6 h-px bg-text-primary transition-all duration-300 ${menuOpen ? "rotate-45 translate-y-2" : ""}`} />
-          <span className={`block w-6 h-px bg-text-primary transition-all duration-300 ${menuOpen ? "opacity-0" : ""}`} />
-          <span className={`block w-6 h-px bg-text-primary transition-all duration-300 ${menuOpen ? "-rotate-45 -translate-y-2" : ""}`} />
+          <span className={`absolute w-6 h-px bg-text-primary transition-all duration-300 ${menuOpen ? "rotate-45" : ""}`} />
+          <span className={`absolute w-6 h-px bg-text-primary transition-all duration-300 ${menuOpen ? "opacity-0" : ""}`} />
+          <span className={`absolute w-6 h-px bg-text-primary transition-all duration-300 ${menuOpen ? "-rotate-45" : ""}`} />
         </button>
 
-        <div className={`md:hidden fixed inset-0 bg-piano-dark/98 flex flex-col justify-center items-center gap-8 transition-all duration-300 z-40 ${menuOpen ? "opacity-100 visible pointer-events-auto" : "opacity-0 invisible pointer-events-none"}`}>
+        <div className={`md:hidden fixed inset-0 bg-piano-dark/98 flex flex-col justify-center items-center gap-10 transition-all duration-300 z-[45] ${menuOpen ? "opacity-100 visible pointer-events-auto" : "opacity-0 invisible pointer-events-none"}`}>
           {["About", "Gallery", "Contact"].map((item) => (
             <button
               key={item}
               onClick={() => scrollTo(item.toLowerCase())}
-              className="font-body text-sm md:text-xs tracking-[0.2em] uppercase text-text-secondary hover:text-text-primary transition-all duration-300 relative group"
+              className="font-body text-2xl tracking-[0.2em] uppercase text-text-secondary hover:text-text-primary transition-all duration-300"
             >
               {item}
-              <span className="absolute -bottom-1 left-0 w-0 h-px bg-text-primary transition-all duration-300 group-hover:w-full" />
             </button>
           ))}
         </div>
