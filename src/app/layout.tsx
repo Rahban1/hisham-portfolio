@@ -16,8 +16,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Hisham | Synthesizer Artist",
-  description: "Professional synthesizer player and music producer",
+  title: "Hisham | Piano Artist",
+  description: "Professional Piano player and music producer",
 };
 
 export default function RootLayout({

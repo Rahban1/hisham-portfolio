@@ -140,7 +140,7 @@ function Hero() {
 
       <div className="relative z-10 text-center px-6">
         <p className="font-body text-xs tracking-[0.5em] uppercase text-text-secondary mb-8 animate-slide-up">
-          Synthesizer Artist
+          Piano Artist
         </p>
         <h1 className="font-heading text-[80px] md:text-[160px] lg:text-[200px] font-light text-text-primary tracking-[0.02em] leading-none animate-slide-up-delay-1">
           H<br className="md:hidden" />I<br className="md:hidden" />S<br className="md:hidden" />H<br className="md:hidden" />A<br className="md:hidden" />M
@@ -181,7 +181,7 @@ function About() {
               <div className="relative ml-4 mt-4">
                 <img
                   src={mediaFiles.image}
-                  alt="Playing synthesizer"
+                  alt="Playing Piano"
                   className="w-full h-auto max-h-[500px] object-contain grayscale contrast-110"
                 />
               </div>
@@ -195,7 +195,7 @@ function About() {
               </p>
               <div className="w-12 h-px bg-text-secondary/30" />
               <p className="font-body text-text-secondary text-lg leading-relaxed">
-                A passionate synthesizer player bringing electronic music to life
+                A passionate piano player bringing electronic music to life
                 through keys and knobs. With years of experience performing and
                 producing, I explore the boundaries of sound, blending classical
                 piano techniques with modern electronic synthesis.
@@ -305,6 +305,17 @@ function Gallery() {
   const [isClosing, setIsClosing] = useState(false);
   const modalVideoRef = useRef<HTMLVideoElement>(null);
   const mounted = useIsMounted();
+
+  useEffect(() => {
+    if (activeVideo) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [activeVideo]);
 
   const handleClose = () => {
     if (modalVideoRef.current) {
