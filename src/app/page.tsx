@@ -72,7 +72,6 @@ function ScrollWrapper({
 
 function Navigation() {
   const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -82,43 +81,16 @@ function Navigation() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-    setMenuOpen(false);
-  };
-
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled || menuOpen ? "bg-piano-dark/95 backdrop-blur-md" : "bg-transparent"
+        scrolled ? "bg-piano-dark/95 backdrop-blur-md" : "bg-transparent"
       }`}
     >
       <div className="max-w-[1400px] mx-auto px-6 md:px-8 py-4 md:py-6 flex justify-between items-center">
         <span className="font-heading text-xl md:text-2xl tracking-[0.3em] text-text-primary font-light">
           HISHAM
         </span>
-        
-        <button
-          className="md:hidden w-12 h-12 flex flex-col justify-center items-center relative"
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Toggle menu"
-        >
-          <span className={`absolute w-6 h-px bg-text-primary transition-all duration-300 ${menuOpen ? "rotate-45" : ""}`} />
-          <span className={`absolute w-6 h-px bg-text-primary transition-all duration-300 ${menuOpen ? "opacity-0" : ""}`} />
-          <span className={`absolute w-6 h-px bg-text-primary transition-all duration-300 ${menuOpen ? "-rotate-45" : ""}`} />
-        </button>
-
-        <div className={`md:hidden fixed inset-0 bg-piano-dark/98 flex flex-col justify-center items-center gap-10 transition-all duration-300 z-[45] ${menuOpen ? "opacity-100 visible pointer-events-auto" : "opacity-0 invisible pointer-events-none"}`}>
-          {["About", "Gallery", "Contact"].map((item) => (
-            <button
-              key={item}
-              onClick={() => scrollTo(item.toLowerCase())}
-              className="font-body text-2xl tracking-[0.2em] uppercase text-text-secondary hover:text-text-primary transition-all duration-300"
-            >
-              {item}
-            </button>
-          ))}
-        </div>
       </div>
     </nav>
   );
