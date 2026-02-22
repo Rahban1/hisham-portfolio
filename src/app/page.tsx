@@ -4,18 +4,18 @@ import { useState, useRef, useEffect } from "react";
 
 const mediaFiles = {
   videos: [
-    "/public/media/WhatsApp Video 2026-02-22 at 08.05.30.mp4",
-    "/public/media/WhatsApp Video 2026-02-22 at 08.02.51.mp4",
-    "/public/media/WhatsApp Video 2026-02-22 at 08.01.44.mp4",
-    "/public/media/WhatsApp Video 2026-02-22 at 07.57.06.mp4",
-    "/public/media/WhatsApp Video 2026-02-22 at 07.54.14.mp4",
-    "/public/media/WhatsApp Video 2026-02-22 at 07.51.56.mp4",
-    "/public/media/WhatsApp Video 2026-02-22 at 07.51.06.mp4",
-    "/public/media/WhatsApp Video 2026-02-22 at 07.49.15.mp4",
-    "/public/media/WhatsApp Video 2026-02-22 at 07.47.52.mp4",
-    "/public/media/WhatsApp Video 2026-02-22 at 07.46.49.mp4",
+    "/media/WhatsApp Video 2026-02-22 at 08.05.30.mp4",
+    "/media/WhatsApp Video 2026-02-22 at 08.02.51.mp4",
+    "/media/WhatsApp Video 2026-02-22 at 08.01.44.mp4",
+    "/media/WhatsApp Video 2026-02-22 at 07.57.06.mp4",
+    "/media/WhatsApp Video 2026-02-22 at 07.54.14.mp4",
+    "/media/WhatsApp Video 2026-02-22 at 07.51.56.mp4",
+    "/media/WhatsApp Video 2026-02-22 at 07.51.06.mp4",
+    "/media/WhatsApp Video 2026-02-22 at 07.49.15.mp4",
+    "/media/WhatsApp Video 2026-02-22 at 07.47.52.mp4",
+    "/media/WhatsApp Video 2026-02-22 at 07.46.49.mp4",
   ],
-  image: "/public/media/WhatsApp Image 2026-02-22 at 07.58.07.jpeg",
+  image: "/media/WhatsApp Image 2026-02-22 at 07.58.07.jpeg",
 };
 
 function Navigation() {
@@ -127,60 +127,46 @@ function About() {
 
 function VideoCard({
   src,
+  index,
   onPlay,
 }: {
   src: string;
-  onPlay: () => void;
+  index: number;
+  onPlay: (index: number, rect: DOMRect) => void;
 }) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
 
-  const handlePlay = () => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause();
-      } else {
-        videoRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
+  const handleClick = () => {
+    if (cardRef.current) {
+      const rect = cardRef.current.getBoundingClientRect();
+      onPlay(index, rect);
     }
-    onPlay();
   };
 
   return (
     <div
-      className="relative aspect-video bg-piano-card cursor-pointer group"
-      onClick={handlePlay}
+      ref={cardRef}
+      className="video-card relative aspect-video bg-piano-card cursor-pointer group"
+      onClick={handleClick}
     >
       <video
-        ref={videoRef}
         src={src}
         className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"
-        loop
         muted
+        loop
         playsInline
+        preload="metadata"
       />
       <div className="absolute inset-0 bg-piano-black/40 group-hover:bg-transparent transition-all duration-300" />
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="w-16 h-16 rounded-full border-2 border-text-primary flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-          {isPlaying ? (
-            <svg
-              className="w-6 h-6 text-text-primary ml-1"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <rect x="6" y="4" width="4" height="16" />
-              <rect x="14" y="4" width="4" height="16" />
-            </svg>
-          ) : (
-            <svg
-              className="w-6 h-6 text-text-primary ml-1"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path d="M8 5v14l11-7z" />
-            </svg>
-          )}
+          <svg
+            className="w-6 h-6 text-text-primary ml-1"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path d="M8 5v14l11-7z" />
+          </svg>
         </div>
       </div>
     </div>
@@ -188,7 +174,28 @@ function VideoCard({
 }
 
 function Gallery() {
-  const [activeVideo, setActiveVideo] = useState<number | null>(null);
+  const [activeVideo, setActiveVideo] = useState<{
+    index: number;
+    rect: DOMRect;
+  } | null>(null);
+  const [isClosing, setIsClosing] = useState(false);
+  const modalVideoRef = useRef<HTMLVideoElement>(null);
+
+  const handleClose = () => {
+    if (modalVideoRef.current) {
+      modalVideoRef.current.pause();
+      modalVideoRef.current.currentTime = 0;
+    }
+    setIsClosing(true);
+    setTimeout(() => {
+      setActiveVideo(null);
+      setIsClosing(false);
+    }, 300);
+  };
+
+  const handlePlay = (index: number, rect: DOMRect) => {
+    setActiveVideo({ index, rect });
+  };
 
   return (
     <section id="gallery" className="py-32 px-6 bg-piano-gray grain">
@@ -201,25 +208,54 @@ function Gallery() {
             <VideoCard
               key={index}
               src={video}
-              onPlay={() =>
-                setActiveVideo(activeVideo === index ? null : index)
-              }
+              index={index}
+              onPlay={handlePlay}
             />
           ))}
         </div>
       </div>
-      {activeVideo !== null && (
+      {activeVideo && (
         <div
-          className="fixed inset-0 z-50 bg-piano-dark/95 flex items-center justify-center p-6"
-          onClick={() => setActiveVideo(null)}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8"
+          style={{
+            animation: isClosing ? "fade-out 0.3s ease-out forwards" : "fade-in 0.3s ease-out forwards",
+          }}
+          onClick={handleClose}
         >
-          <video
-            src={mediaFiles.videos[activeVideo]}
-            controls
-            autoPlay
-            className="max-w-4xl max-h-[80vh] w-full"
-            onClick={(e) => e.stopPropagation()}
+          <div
+            className="absolute inset-0 bg-piano-dark/60 backdrop-blur-md"
+            style={{
+              animation: isClosing ? "fade-out 0.2s ease-out forwards" : "fade-in 0.2s ease-out forwards",
+            }}
+            onClick={handleClose}
           />
+          <div
+            className="relative z-10 w-full max-w-5xl"
+            style={{
+              animation: isClosing ? "shrink-to 0.3s ease-out forwards" : "expand-from 0.3s ease-out forwards",
+              transformOrigin: `${
+                ((activeVideo.rect.left + activeVideo.rect.width / 2) /
+                  window.innerWidth) *
+                100
+              }% ${
+                ((activeVideo.rect.top + activeVideo.rect.height / 2) /
+                  window.innerHeight) *
+                100
+              }%`,
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="relative bg-piano-black rounded-lg overflow-hidden shadow-2xl border border-white/10">
+              <video
+                ref={modalVideoRef}
+                src={mediaFiles.videos[activeVideo.index]}
+                controls
+                autoPlay={!isClosing}
+                className="w-full max-h-[80vh] block"
+                style={{ maxHeight: "calc(100vh - 120px)" }}
+              />
+            </div>
+          </div>
         </div>
       )}
     </section>
