@@ -4,18 +4,18 @@ import { useState, useRef, useEffect } from "react";
 
 const mediaFiles = {
   videos: [
-    "/media/WhatsApp Video 2026-02-22 at 08.05.30.mp4",
-    "/media/WhatsApp Video 2026-02-22 at 08.02.51.mp4",
-    "/media/WhatsApp Video 2026-02-22 at 08.01.44.mp4",
-    "/media/WhatsApp Video 2026-02-22 at 07.57.06.mp4",
-    "/media/WhatsApp Video 2026-02-22 at 07.54.14.mp4",
-    "/media/WhatsApp Video 2026-02-22 at 07.51.56.mp4",
-    "/media/WhatsApp Video 2026-02-22 at 07.51.06.mp4",
-    "/media/WhatsApp Video 2026-02-22 at 07.49.15.mp4",
-    "/media/WhatsApp Video 2026-02-22 at 07.47.52.mp4",
-    "/media/WhatsApp Video 2026-02-22 at 07.46.49.mp4",
+    "/public/media/WhatsApp Video 2026-02-22 at 08.05.30.mp4",
+    "/public/media/WhatsApp Video 2026-02-22 at 08.02.51.mp4",
+    "/public/media/WhatsApp Video 2026-02-22 at 08.01.44.mp4",
+    "/public/media/WhatsApp Video 2026-02-22 at 07.57.06.mp4",
+    "/public/media/WhatsApp Video 2026-02-22 at 07.54.14.mp4",
+    "/public/media/WhatsApp Video 2026-02-22 at 07.51.56.mp4",
+    "/public/media/WhatsApp Video 2026-02-22 at 07.51.06.mp4",
+    "/public/media/WhatsApp Video 2026-02-22 at 07.49.15.mp4",
+    "/public/media/WhatsApp Video 2026-02-22 at 07.47.52.mp4",
+    "/public/media/WhatsApp Video 2026-02-22 at 07.46.49.mp4",
   ],
-  image: "/media/WhatsApp Image 2026-02-22 at 07.58.07.jpeg",
+  image: "/public/media/WhatsApp Image 2026-02-22 at 07.58.07.jpeg",
 };
 
 function Navigation() {
