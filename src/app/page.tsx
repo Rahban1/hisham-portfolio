@@ -265,10 +265,9 @@ function VideoCard({
             preload="auto"
           />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-piano-black/60 via-transparent to-transparent opacity-60 md:group-hover:opacity-30 transition-opacity duration-300" />
         
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
-          <div className="w-16 h-16 rounded-full border-2 border-text-primary flex items-center justify-center scale-90 md:group-hover:scale-100 transition-transform duration-300">
+        <div className="absolute inset-0 flex items-center justify-center md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
+          <div className="w-16 h-16 rounded-full border-2 border-text-primary flex items-center justify-center">
             <svg
               className="w-6 h-6 text-text-primary ml-1"
               fill="currentColor"
@@ -279,7 +278,7 @@ function VideoCard({
           </div>
         </div>
 
-        <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end">
+        <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end pointer-events-none">
           <span className="font-heading text-xs tracking-[0.3em] uppercase text-text-primary/80">
             Performance
           </span>
@@ -294,6 +293,77 @@ function VideoCard({
         <div className="absolute top-0 right-0 w-px h-full bg-gradient-to-b from-transparent via-text-secondary/20 to-transparent" />
       </div>
     </ScrollWrapper>
+  );
+}
+
+function MobileVideoCard({
+  src,
+  index,
+  onPlay,
+}: {
+  src: string;
+  index: number;
+  onPlay: (index: number, rect: DOMRect) => void;
+}) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const mounted = useIsMounted();
+
+  useEffect(() => {
+    if (videoRef.current && mounted) {
+      videoRef.current.play().catch(() => {});
+    }
+  }, [mounted]);
+
+  const handleClick = () => {
+    if (cardRef.current) {
+      const rect = cardRef.current.getBoundingClientRect();
+      onPlay(index, rect);
+    }
+  };
+
+  return (
+    <div
+      ref={cardRef}
+      className="relative aspect-video bg-piano-black cursor-pointer overflow-hidden"
+      onClick={handleClick}
+    >
+      {mounted && (
+        <video
+          ref={videoRef}
+          src={src}
+          className="w-full h-full object-cover"
+          muted
+          loop
+          playsInline
+          autoPlay
+        />
+      )}
+      
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="w-16 h-16 rounded-full border-2 border-text-primary/80 flex items-center justify-center bg-piano-black/30">
+          <svg
+            className="w-6 h-6 text-text-primary ml-1"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path d="M8 5v14l11-7z" />
+          </svg>
+        </div>
+      </div>
+
+      <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end pointer-events-none">
+        <span className="font-heading text-xs tracking-[0.3em] uppercase text-text-primary/80">
+          Performance
+        </span>
+        <span className="font-heading text-lg text-text-primary/60">
+          {String(index + 1).padStart(2, '0')}
+        </span>
+      </div>
+
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-text-secondary/30 to-transparent" />
+      <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-text-secondary/30 to-transparent" />
+    </div>
   );
 }
 
@@ -351,7 +421,21 @@ function Gallery() {
           </div>
         </ScrollWrapper>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-x-6 md:gap-y-12">
+        <div className="md:hidden">
+          <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide -mx-6 px-6 pb-4">
+            {mediaFiles.videos.map((video, index) => (
+              <div key={index} className="snap-center shrink-0 w-[85vw]">
+                <MobileVideoCard
+                  src={video}
+                  index={index}
+                  onPlay={handlePlay}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-x-6 md:gap-y-12">
           {mediaFiles.videos.map((video, index) => (
             <VideoCard
               key={index}
