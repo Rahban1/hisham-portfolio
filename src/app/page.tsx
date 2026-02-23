@@ -4,16 +4,28 @@ import { useState, useRef, useEffect } from "react";
 
 const mediaFiles = {
   videos: [
-    "/media/WhatsApp Video 2026-02-22 at 08.05.30.mp4",
-    "/media/WhatsApp Video 2026-02-22 at 08.02.51.mp4",
-    "/media/WhatsApp Video 2026-02-22 at 08.01.44.mp4",
-    "/media/WhatsApp Video 2026-02-22 at 07.57.06.mp4",
-    "/media/WhatsApp Video 2026-02-22 at 07.54.14.mp4",
-    "/media/WhatsApp Video 2026-02-22 at 07.51.56.mp4",
-    "/media/WhatsApp Video 2026-02-22 at 07.51.06.mp4",
-    "/media/WhatsApp Video 2026-02-22 at 07.49.15.mp4",
-    "/media/WhatsApp Video 2026-02-22 at 07.47.52.mp4",
-    "/media/WhatsApp Video 2026-02-22 at 07.46.49.mp4",
+    "/media/WhatsApp Video 2026-02-22 at 08.05.30.webm",
+    "/media/WhatsApp Video 2026-02-22 at 08.02.51.webm",
+    "/media/WhatsApp Video 2026-02-22 at 08.01.44.webm",
+    "/media/WhatsApp Video 2026-02-22 at 07.57.06.webm",
+    "/media/WhatsApp Video 2026-02-22 at 07.54.14.webm",
+    "/media/WhatsApp Video 2026-02-22 at 07.51.56.webm",
+    "/media/WhatsApp Video 2026-02-22 at 07.51.06.webm",
+    "/media/WhatsApp Video 2026-02-22 at 07.49.15.webm",
+    "/media/WhatsApp Video 2026-02-22 at 07.47.52.webm",
+    "/media/WhatsApp Video 2026-02-22 at 07.46.49.webm",
+  ],
+  posters: [
+    "/media/WhatsApp Video 2026-02-22 at 08.05.30-poster.jpg",
+    "/media/WhatsApp Video 2026-02-22 at 08.02.51-poster.jpg",
+    "/media/WhatsApp Video 2026-02-22 at 08.01.44-poster.jpg",
+    "/media/WhatsApp Video 2026-02-22 at 07.57.06-poster.jpg",
+    "/media/WhatsApp Video 2026-02-22 at 07.54.14-poster.jpg",
+    "/media/WhatsApp Video 2026-02-22 at 07.51.56-poster.jpg",
+    "/media/WhatsApp Video 2026-02-22 at 07.51.06-poster.jpg",
+    "/media/WhatsApp Video 2026-02-22 at 07.49.15-poster.jpg",
+    "/media/WhatsApp Video 2026-02-22 at 07.47.52-poster.jpg",
+    "/media/WhatsApp Video 2026-02-22 at 07.46.49-poster.jpg",
   ],
   image: "/media/WhatsApp Image 2026-02-22 at 07.58.07.jpeg",
 };
@@ -87,7 +99,7 @@ function Navigation() {
         scrolled ? "bg-piano-dark/95 backdrop-blur-md" : "bg-transparent"
       }`}
     >
-      <div className="max-w-[1400px] mx-auto px-6 md:px-8 py-4 md:py-6 flex justify-between items-center">
+      <div className="max-w-[1400px] mx-auto px-6 md:px-8 py-4 md:py-6">
         <span className="font-heading text-xl md:text-2xl tracking-[0.3em] text-text-primary font-light">
           HISHAM
         </span>
@@ -202,10 +214,12 @@ function PianoKeyDivider() {
 
 function VideoCard({
   src,
+  poster,
   index,
   onPlay,
 }: {
   src: string;
+  poster: string;
   index: number;
   onPlay: (index: number, rect: DOMRect) => void;
 }) {
@@ -229,6 +243,7 @@ function VideoCard({
         {mounted && (
           <video
             src={src}
+            poster={poster}
             className="w-full h-full object-cover md:grayscale md:group-hover:grayscale-0 md:group-hover:scale-105 transition-all duration-500"
             muted
             loop
@@ -269,22 +284,17 @@ function VideoCard({
 
 function MobileVideoCard({
   src,
+  poster,
   index,
   onPlay,
 }: {
   src: string;
+  poster: string;
   index: number;
   onPlay: (index: number, rect: DOMRect) => void;
 }) {
   const cardRef = useRef<HTMLDivElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
   const mounted = useIsMounted();
-
-  useEffect(() => {
-    if (videoRef.current && mounted) {
-      videoRef.current.play().catch(() => {});
-    }
-  }, [mounted]);
 
   const handleClick = () => {
     if (cardRef.current) {
@@ -301,13 +311,13 @@ function MobileVideoCard({
     >
       {mounted && (
         <video
-          ref={videoRef}
           src={src}
+          poster={poster}
           className="w-full h-full object-cover"
           muted
           loop
           playsInline
-          autoPlay
+          preload="none"
         />
       )}
       
@@ -398,6 +408,7 @@ function Gallery() {
               <div key={index} className="snap-center shrink-0 w-[85vw]">
                 <MobileVideoCard
                   src={video}
+                  poster={mediaFiles.posters[index]}
                   index={index}
                   onPlay={handlePlay}
                 />
@@ -406,11 +417,12 @@ function Gallery() {
           </div>
         </div>
 
-        <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-x-6 md:gap-y-12">
+        <div className="hidden md:flex md:flex-wrap justify-center gap-4 md:gap-x-6 md:gap-y-12 max-w-5xl mx-auto">
           {mediaFiles.videos.map((video, index) => (
             <VideoCard
               key={index}
               src={video}
+              poster={mediaFiles.posters[index]}
               index={index}
               onPlay={handlePlay}
             />
